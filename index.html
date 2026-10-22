@@ -41,7 +41,7 @@ else if(d.phase==='final'){content=`<div class="center"><div class="headline win
 app.innerHTML=header(role==='host'?'🎤 진행자 화면':'📱 참가자 화면')+`<div style="margin-top:24px">${content}</div>`;
 if(d.phase==='lobby'&&role==='host'){let link=location.href.split('?')[0]+'?room='+encodeURIComponent(code)+'&url='+encodeURIComponent(localStorage.getItem('qp_url'))+'&key='+encodeURIComponent(localStorage.getItem('qp_key'));try{new QRCode(qs('qr'),{text:link,width:190,height:190})}catch(e){qs('qr').textContent=link}}
 if(d.phase==='question'){timer=setInterval(()=>{let el=qs('timer');if(el){let s=remain();el.textContent=s;if(s===5)tune('tick');if(s===0&&role==='player'&&selected===null){document.querySelectorAll('.option').forEach(x=>x.disabled=true);let h=qs('hint');if(h)h.textContent='⏰ 시간 종료!'}}},1000)}if(d.phase==='final'&&awardStep>0)showAwards(awardStep)}
-}
+
 function scores(rows){return (rows||[]).map((x,i)=>`<div class="scoreline"><span><span class="rank">${x.rank}위</span> ${i===0?'👑 ':''}${esc(x.nickname)}</span><b>${Number(x.points).toLocaleString()}점</b></div>`).join('')||'<p>아직 참가자가 없습니다.</p>'}
 function updateLive(){if(!latest)return;const d=latest;if(d.phase==='lobby'){let el=qs('playerCount');if(el)el.textContent=d.count}if(d.phase==='question'){let a=qs('answered'),p=qs('players');if(a)a.textContent=d.answered;if(p)p.textContent=d.count}}
 window.answer=async i=>{if(role!=='player'||selected!==null||remain()===0)return;selected=i;tune('correct');render();try{await rpc('qp_answer',{p_code:code,p_choice:i});toast('답변이 접수되었어요! 🎯')}catch(e){selected=null;render();toast(e.message)}};
